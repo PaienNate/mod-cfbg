@@ -884,7 +884,7 @@ void CFBG::SendMessageQueue(BattlegroundQueue* bgQueue, Battleground* bg, PvPDif
 
     if (sWorld->getBoolConfig(CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_PLAYERONLY))
     {
-        ChatHandler(leader->GetSession()).PSendSysMessage("CFBG %s (Levels: %u - %u). Registered: %u/%u", bgName.c_str(), q_min_level, q_max_level, qTotal, MinPlayers);
+        ChatHandler(leader->GetSession()).PSendSysMessage("混排战场 %s (等级: %u - %u). 已排队: %u/%u", bgName.c_str(), q_min_level, q_max_level, qTotal, MinPlayers);
     }
     else
     {
@@ -925,7 +925,7 @@ void CFBG::SendMessageQueue(BattlegroundQueue* bgQueue, Battleground* bg, PvPDif
 
             if (_showPlayerName)
             {
-                std::string msg = Acore::StringFormatFmt("{} |cffffffffHas Joined|r |cffff0000{}|r|cffffffff(|r|cff00ffff{}|r|cffffffff/|r|cff00ffff{}|r|cffffffff)|r",
+                std::string msg = Acore::StringFormatFmt("{} |cffffffff已加入|r |cffff0000{}|r|cffffffff(|r|cff00ffff{}|r|cffffffff/|r|cff00ffff{}|r|cffffffff)|r",
                     leader->GetPlayerName(), bg->GetName(), qTotal, MinPlayers);
 
                 for (auto const& session : sWorld->GetAllSessions())

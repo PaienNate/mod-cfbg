@@ -39,7 +39,7 @@ public:
 
         if (sCFBG->RandomizeRaces())
         {
-            handler->SendSysMessage("Race selection is currently disabled.");
+            handler->SendSysMessage("种族选择目前被禁用。");
             handler->SetSentErrorMessage(true);
             return true;
         }
@@ -54,28 +54,28 @@ public:
                 }
                 else
                 {
-                    handler->SendSysMessage("Race not available to your faction.");
+                    handler->SendSysMessage("种族不适用于您的阵营。");
                     handler->SetSentErrorMessage(true);
                     return true;
                 }
                 
                 if (!IsRaceValidForClass(player, raceId))
                 {
-                    handler->SendSysMessage("Race not available to your class.");
+                    handler->SendSysMessage("种族不适用于您的职业。");
                     handler->SetSentErrorMessage(true);
                     return true;
                 }
 
                 if (raceId == RACE_NIGHTELF)
                 {
-                    handler->SendSysMessage("Night elf models are not available as the female model is missing and the male one causes client crashes.");
+                    handler->SendSysMessage("暗夜精灵模型不可用，因为女性模型丢失，男性模型导致客户端崩溃。");
                     handler->SetSentErrorMessage(true);
                     return true;
                 }
 
                 if (player->getGender() == GENDER_FEMALE && (raceId == RACE_TROLL || raceId == RACE_DWARF))
                 {
-                    handler->SendSysMessage("Female models are not available for the following races: troll, dwarf.");
+                    handler->SendSysMessage("女性模型不适用于以下种族：巨魔、矮人。");
                     handler->SetSentErrorMessage(true);
                     return true;
                 }
@@ -86,11 +86,11 @@ public:
 
         if (!raceId)
         {
-            handler->SendSysMessage("Race unavailable. CFBG selected race set to random. You will be morphed into a random race when you enter a battleground on the opposite team.");
+            handler->SendSysMessage("种族不可用. 混排战场种族选择设置为随机. 当你进入对方队伍的战场时，将随机为你选择一个种族。");
         }
         else
         {
-            handler->PSendSysMessage("CFBG selected race set to %s", raceInput);
+            handler->PSendSysMessage("混排战场随机选择的种族为： %s", raceInput);
         }
 
         return true;
