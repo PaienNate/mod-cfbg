@@ -48,7 +48,7 @@ public:
         {
             if (raceInput == raceVariable.RaceName)
             {
-                if (player->GetTeamId(true) == raceVariable.TeamId)
+                if (player->GetTeamId() == raceVariable.TeamId)
                 {
                     raceId = raceVariable.RaceId;
                 }
@@ -100,7 +100,7 @@ public:
     {
         auto raceData{ *sCFBG->GetRaceData() };
 
-        std::vector<uint8> availableRacesForClass = player->GetTeamId(true) == TEAM_HORDE ?
+        std::vector<uint8> availableRacesForClass = player->GetTeamId() == TEAM_HORDE ?
             raceData[player->getClass()].availableRacesA : raceData[player->getClass()].availableRacesH;
 
         for (auto const& races : availableRacesForClass)
