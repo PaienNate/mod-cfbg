@@ -6,6 +6,7 @@
 
 #include "CFBG.h"
 #include "BattlegroundMgr.h"
+#include "BattlegroundUtils.h"
 #include "Chat.h"
 #include "Config.h"
 #include "Containers.h"
@@ -35,12 +36,12 @@ CrossFactionGroupInfo::CrossFactionGroupInfo(GroupQueueInfo* groupInfo)
         if (player->getClass() == CLASS_HUNTER && !IsHunterJoining)
             IsHunterJoining = true;
 
-        sumLevels += player->getLevel();
+        sumLevels += player->GetLevel();
         sumAverageItemLevels += player->GetAverageItemLevel();
         playersCount++;
 
         SumAverageItemLevel += player->GetAverageItemLevel();
-        SumPlayerLevel += player->getLevel();
+        SumPlayerLevel += player->GetLevel();
     }
 
     if (!playersCount)
@@ -63,7 +64,7 @@ CrossFactionQueueInfo::CrossFactionQueueInfo(BattlegroundQueue* bgQueue)
                     continue;
 
                 SumAverageItemLevel[team] += player->GetAverageItemLevel();
-                SumPlayerLevel[team] += player->getLevel();
+                SumPlayerLevel[team] += player->GetLevel();
                 PlayersCount[team]++;
             }
         }
@@ -233,7 +234,7 @@ uint32 CFBG::GetBGTeamSumPlayerLevel(Battleground* bg, TeamId team)
     {
         if (player && player->GetTeamId() == team)
         {
-            sum += player->getLevel();
+            sum += player->GetLevel();
         }
     }
 
@@ -850,7 +851,7 @@ bool CFBG::isClassJoining(uint8 _class, Player* player, uint32 minLevel)
         return false;
     }
 
-    return player->getClass() == _class && (player->getLevel() >= minLevel);
+    return player->getClass() == _class && (player->GetLevel() >= minLevel);
 }
 
 void CFBG::UpdateForget(Player* player)
@@ -879,12 +880,12 @@ void CFBG::SendMessageQueue(BattlegroundQueue* bgQueue, Battleground* bg, PvPDif
     auto bgName = bg->GetName();
     uint32 q_min_level = std::min(bracketEntry->minLevel, (uint32)80);
     uint32 q_max_level = std::min(bracketEntry->maxLevel, (uint32)80);
-    uint32 MinPlayers = bg->GetMinPlayersPerTeam() * 2;
+    uint32 MinPlayers = GetMinPlayersPerTeam(bg, bracketEntry) * 2;
     uint32 qTotal = bgQueue->GetPlayersCountInGroupsQueue(bracketId, (BattlegroundQueueGroupTypes)BG_QUEUE_CFBG);
 
     if (sWorld->getBoolConfig(CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_PLAYERONLY))
     {
-        ChatHandler(leader->GetSession()).PSendSysMessage("混排战场 %s (等级: %u - %u). 已排队: %u/%u", bgName.c_str(), q_min_level, q_max_level, qTotal, MinPlayers);
+        ChatHandler(leader->GetSession()).PSendSysMessage("混排战场 {} (等级: {} - {}). 已排队: {}/{}", bgName.c_str(), q_min_level, q_max_level, qTotal, MinPlayers);
     }
     else
     {
@@ -925,7 +926,7 @@ void CFBG::SendMessageQueue(BattlegroundQueue* bgQueue, Battleground* bg, PvPDif
 
             if (_showPlayerName)
             {
-                std::string msg = Acore::StringFormatFmt("{} |cffffffff已加入|r |cffff0000{}|r|cffffffff(|r|cff00ffff{}|r|cffffffff/|r|cff00ffff{}|r|cffffffff)|r",
+                std::string msg = Acore::StringFormat("{} |cffffffff已加入|r |cffff0000{}|r|cffffffff(|r|cff00ffff{}|r|cffffffff/|r|cff00ffff{}|r|cffffffff)|r",
                     leader->GetPlayerName(), bg->GetName(), qTotal, MinPlayers);
 
                 for (auto const& session : sWorld->GetAllSessions())
@@ -946,7 +947,7 @@ void CFBG::SendMessageQueue(BattlegroundQueue* bgQueue, Battleground* bg, PvPDif
             }
             else
             {
-                sWorld->SendWorldTextOptional(LANG_BG_QUEUE_ANNOUNCE_WORLD, ANNOUNCER_FLAG_DISABLE_BG_QUEUE, bgName.c_str(), q_min_level, q_max_level, qTotal, MinPlayers);
+                ChatHandler(nullptr).SendWorldTextOptional(LANG_BG_QUEUE_ANNOUNCE_WORLD, ANNOUNCER_FLAG_DISABLE_BG_QUEUE, bgName, q_min_level, q_max_level, qTotal, MinPlayers);
             }
         }
     }
